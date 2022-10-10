@@ -13,10 +13,10 @@
         </option>
     </section>
     <patch id="redirectsave">
-        <savegame external="/rb3/save/RB3Save{$__region}" clone="true">
+        <savegame external="/rb3/save/RB3Save" clone="true">
     </patch>
     <patch id="rb3dx">
-        <folder external="/rb3/rb3dx/gen" recursive="true"/>
-        <folder external="/rb3/rb3dx/gen" disc="/gen"/>
+        <folder external="/rb3/gen" recursive="true"/>
+        <folder external="/rb3/gen" disc="/gen"/>
     </patch>
 </wiidisc>
