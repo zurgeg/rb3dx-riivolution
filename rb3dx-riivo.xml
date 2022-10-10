@@ -13,7 +13,7 @@
         </option>
     </section>
     <patch id="redirectsave">
-        <savegame external="/rb3/save/RB3Save" clone="true">
+        <savegame external="/rb3/save/RB3Save" clone="true"/>
     </patch>
     <patch id="rb3dx">
         <folder external="/rb3/gen" recursive="true"/>
