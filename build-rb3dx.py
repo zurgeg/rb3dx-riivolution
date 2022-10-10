@@ -1,8 +1,8 @@
 from os.path import isdir, exists, join
-from os import access
+from os import cwd
 from click import Choice, prompt, echo
 from alive_progress import alive_bar
-from subprocess import Popen, DEVNULL
+from subprocess import Popen, DEVNULL, PIPE
 
 menu_choices = Choice(["Make ISO", "Make Riivolution"])
 
@@ -40,5 +40,24 @@ else:
                 else:
                     raise Exception("An unknown OS error occured.\nSOMEHOW, you were stupid enough to get around my dummy protection.")
         bar.title(f"Checking if game (at {where_is_rb3}) is a valid RB3 Wii game...")
-        
+        bar()
+        # We won't even try with the idiot protection here.
+        if exists(where_is_rb3) and not isdir(where_is_rb3):
+            bar()
+            id6_process = Popen([where_is_wit, "id6", where_is_rb3], stdout=PIPE, stderr=PIPE)
+            bar()
+            id6_stdout, _ = id6_process.communicate()
+            bar()
+            id6_process.wait()
+            bar()
+            if id6_stdout.startswith("SZE"):
+                bar()
+                bar.title(f"Extracting Rock Band 3...")
+                bar()
+                Popen([where_is_wit, "extract", where_is_rb3, join(cwd(), "temp", "extracted_rb3")]).wait()
+                bar()
+                
+
+            
+
         
