@@ -1,1 +1,22 @@
-<wiidisc version=1>
+<wiidisc version="1">
+    <id game="SZB"/>
+    <section name="Rock Band 3 Patches">
+        <option name="Save to SD">
+            <choice name="Enabled">
+                <patch id="redirectasve"/>
+            </choice>
+        </option>
+        <option name="Enable RB3DX">
+            <choice name="Enabled">
+                <patch id="rb3dx"/>
+            </choice>
+        </option>
+    </section>
+    <patch id="redirectsave">
+        <savegame external="/rb3/save/RB3Save{$__region}" clone="true">
+    </patch>
+    <patch id="rb3dx">
+        <folder external="/rb3/rb3dx/gen" recursive="true"/>
+        <folder external="/rb3/rb3dx/gen" disc="/gen"/>
+    </patch>
+</wiidisc>
