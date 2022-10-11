@@ -50,25 +50,14 @@ else:
                     echo("Alright! I've downloaded RB3DX!")
         else:
             while True:
-                echo("Oh! It looks like you have RB3DX downloaded already! Awesome! I'll update that real quick...")
+                echo("Oh! It looks like you have RB3DX downloaded already!")
                 old_dir = curdir
                 chdir(join(curdir, "temp", "rock-band-3-delue"))
-                
-                statuscode = Popen(["git", "pull"], stdout=DEVNULL, stderr=DEVNULL).wait()
-                if statuscode:
-                    use_other_rb3dx = prompt("Sorry! I couldn't update RB3DX! Do you want to use a different copy of RB3DX?")
-                    if use_other_rb3dx:
-                        # We'll move the cloned RB3DX temporarily
-                        chdir(old_dir)
-                        # We'll move this back during cleanup.
-                        move(join(curdir, "temp", "rock-band-3-delue"), join(curdir, "temp", "rb3dx-update-fail"))
-                        do_break = False
-                        break
-                else:
-                    Popen(["git", "checkout", "wii"], stdout=DEVNULL, stderr=DEVNULL).wait()
-                    where_is_rb3dx = join(curdir, "temp", "rock-band-3-deluxe")
-                    do_break = True
-                    break
+                Popen(["git", "checkout", "wii"], stdout=DEVNULL, stderr=DEVNULL).wait()
+                chdir(old_dir)
+                where_is_rb3dx = join(curdir, "temp", "rock-band-3-deluxe")
+                do_break = True
+                break
             if do_break:
                 break
 
@@ -131,6 +120,8 @@ else:
                         raise Exception("This **probably** should never happen. But just in case, you forgot to checkout the wii branch")
                     bar()
                     copy(ark, dest)
+                bar.title("Executing build script...")
+
             else:
                 raise Exception("Oh... You thought you could get around ME? AND MY IDIOT PROTECTION? NOT TODAY!")
         else:
