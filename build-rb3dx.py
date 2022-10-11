@@ -75,7 +75,7 @@ else:
 
 
     with alive_bar(title="Making Riivolution Patch", total=0, enrich_print=False) as bar:
-        t = Thread(target=call_bar_at_a_very_fast_rate, name="fast", args=[bar])
+        t = Thread(target=call_bar_at_a_very_fast_rate, name="fast", args=[bar], daemon=True)
         t.start()
         bar.title(f"Checking if WIT (at {where_is_wit}) works...")
         # 21 lines of janky idiot protection.
@@ -127,12 +127,11 @@ else:
                     bar()
                     dest = join(where_is_rb3dx, "_build", "wii", basename(ark))
                     bar()
-                    if not isdir(dest):
+                    if not isdir(join(where_is_rb3dx, "_build", "wii")):
                         raise Exception("This **probably** should never happen. But just in case, you forgot to checkout the wii branch")
                     bar()
                     copy(ark, dest)
             else:
-                echo(id6_stdout)
                 raise Exception("Oh... You thought you could get around ME? AND MY IDIOT PROTECTION? NOT TODAY!")
         else:
             raise Exception("I am tired of having to write idiot protection... that's not a file")
