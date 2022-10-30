@@ -24,6 +24,7 @@ if what_to_do == "Make ISO":
 else:
     where_is_wit = prompt("WIT Location")
     where_is_rb3 = prompt("RB3 Location")
+    did_download_rb3dx = False
     while True:
         if not isdir(join(curdir, "temp", "rock-band-3-deluxe")):
             has_rb3dx = confirm("Do you have RB3DX downloaded?")
@@ -42,6 +43,7 @@ else:
                     exit(1)
                 echo("Okay. We are ready to clone the repository. Please wait...")
                 statuscode = Popen(["git", "clone", "https://github.com/hmxmilohax/rock-band-3-deluxe", "./temp/rock-band-3-deluxe"], stdout=DEVNULL, stderr=DEVNULL).wait()
+                did_download_rb3dx = True
                 if statuscode:
                     echo("Uh oh! We had a problem running Git. Try again later.")
                     echo(f"(In case you wanted to know, the status code was {statuscode})")
@@ -50,9 +52,10 @@ else:
                     echo("Alright! I've downloaded RB3DX!")
         else:
             while True:
-                echo("Oh! It looks like you have RB3DX downloaded already!")
+                if not did_download_rb3dx:
+                    echo("Oh! It looks like you have RB3DX downloaded already!")
                 old_dir = curdir
-                chdir(join(curdir, "temp", "rock-band-3-delue"))
+                chdir(join(".", "temp", "rock-band-3-deluxe"))
                 Popen(["git", "checkout", "wii"], stdout=DEVNULL, stderr=DEVNULL).wait()
                 chdir(old_dir)
                 where_is_rb3dx = join(curdir, "temp", "rock-band-3-deluxe")
