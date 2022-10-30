@@ -1,5 +1,5 @@
 from os.path import isdir, exists, join, basename
-from os import chdir, curdir
+from os import chdir, curdir, mkdir
 from click import Choice, prompt, confirm, echo
 from alive_progress import alive_bar
 from subprocess import Popen, DEVNULL, PIPE
@@ -114,19 +114,43 @@ else:
                     bar()
                     bar.title(f"Copying ARK {ark}")
                     bar()
-                    dest = join(where_is_rb3dx, "_build", "wii", basename(ark))
+                    dest = join(where_is_rb3dx, "_build", "wii")
                     bar()
                     if not isdir(join(where_is_rb3dx, "_build", "wii")):
                         raise Exception("This **probably** should never happen. But just in case, you forgot to checkout the wii branch")
                     bar()
                     copy(ark, dest)
                 bar.title("Executing build script...")
+                Popen(join(where_is_rb3dx, "_build_wii.bat")).wait()
+                
+
 
             else:
                 raise Exception("Oh... You thought you could get around ME? AND MY IDIOT PROTECTION? NOT TODAY!")
         else:
             raise Exception("I am tired of having to write idiot protection... that's not a file")
+    while True:
+        dest = prompt("Alrighty! Where should I put the finished files?", prompt_suffix=" ")
+        if not isdir(dest):
+            echo("It needs to be a directory...")
+        else:
+            echo("Alrighty, give me one minute while I copy the files...")
+            arks = glob(join(where_is_rb3dx, "_build", "wii", "*.ark"))
+            try:
+                mkdir(join(dest, "rb3"))
+                mkdir(join(dest, "riivolution"))
+            except:
+                pass
+            for ark in arks:
+                echo(f"Copying {ark}...")
+                copy(ark, join(dest, "rb3"))
+            echo("Copying Riivolution XML")
+            copy(join(curdir, "rb3dx-riivo.xml"), join(dest, "riivolution"))
+            break
+    echo("All done! Thank you!")
 
-            
+
+
+
 
         
