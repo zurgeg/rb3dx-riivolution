@@ -1,5 +1,5 @@
 from os.path import isdir, exists, join, basename
-from os import chdir, curdir, mkdir
+from os import chdir, getcwd, mkdir
 from click import Choice, prompt, confirm, echo
 from alive_progress import alive_bar
 from subprocess import Popen, DEVNULL, PIPE
@@ -26,13 +26,13 @@ else:
     where_is_rb3 = prompt("RB3 Location")
     did_download_rb3dx = False
     while True:
-        if not isdir(join(curdir, "temp", "rock-band-3-deluxe")):
+        if not isdir(join(getcwd(), "temp", "rock-band-3-deluxe")):
             has_rb3dx = confirm("Do you have RB3DX downloaded?")
             if has_rb3dx:
                 where_is_rb3dx = prompt("RB3DX Location")
                 break
             else:
-                where_is_rb3dx = join(curdir, "temp", "rock-band-3-deluxe")
+                where_is_rb3dx = join(getcwd(), "temp", "rock-band-3-deluxe")
                 echo("Okay. I'll download RB3DX now...")
                 keep_rb3dx = confirm("By the way... should I keep RB3DX afterwards? If you run this utility afterwards, I'll update and use the previously downloaded RB3DX.")
                 echo("Alright. I'll check for Git now...")
@@ -42,7 +42,7 @@ else:
                     echo("Sorry! I couldn't find Git! Please install it and try again.")
                     exit(1)
                 echo("Okay. We are ready to clone the repository. Please wait...")
-                statuscode = Popen(["git", "clone", "https://github.com/hmxmilohax/rock-band-3-deluxe", "./temp/rock-band-3-deluxe"], stdout=DEVNULL, stderr=DEVNULL).wait()
+                statuscode = Popen(["git", "clone", "https://github.com/hmxmilohax/rock-band-3-deluxe", "./temp/rock-band-3-deluxe", "wii"], stdout=DEVNULL, stderr=DEVNULL).wait()
                 did_download_rb3dx = True
                 if statuscode:
                     echo("Uh oh! We had a problem running Git. Try again later.")
@@ -54,11 +54,11 @@ else:
             while True:
                 if not did_download_rb3dx:
                     echo("Oh! It looks like you have RB3DX downloaded already!")
-                old_dir = curdir
+                old_dir = getcwd()
                 chdir(join(".", "temp", "rock-band-3-deluxe"))
                 Popen(["git", "checkout", "wii"], stdout=DEVNULL, stderr=DEVNULL).wait()
                 chdir(old_dir)
-                where_is_rb3dx = join(curdir, "temp", "rock-band-3-deluxe")
+                where_is_rb3dx = join(getcwd(), "temp", "rock-band-3-deluxe")
                 do_break = True
                 break
             if do_break:
@@ -109,10 +109,10 @@ else:
                 bar()
                 bar.title(f"Extracting Rock Band 3...")
                 bar()
-                if not isdir(join(curdir, "temp", "extracted_rb3")):
-                    Popen([where_is_wit, "extract", where_is_rb3, join(curdir, "temp", "extracted_rb3")], stdout=PIPE, stderr=PIPE).wait()
+                if not isdir(join(getcwd(), "temp", "extracted_rb3")):
+                    Popen([where_is_wit, "extract", where_is_rb3, join(getcwd(), "temp", "extracted_rb3")], stdout=PIPE, stderr=PIPE).wait()
                 bar()
-                arks = glob(join(curdir, "temp", "extracted_rb3", "files", "gen") + "/*.ark")
+                arks = glob(join(getcwd(), "temp", "extracted_rb3", "files", "gen") + "/*.ark")
                 for ark in arks:
                     bar()
                     bar.title(f"Copying ARK {ark}")
@@ -120,11 +120,13 @@ else:
                     dest = join(where_is_rb3dx, "_build", "wii")
                     bar()
                     if not isdir(join(where_is_rb3dx, "_build", "wii")):
-                        raise Exception("This **probably** should never happen. But just in case, you forgot to checkout the wii branch")
+                        print("This **probably** should never happen. But just in case, you forgot to checkout the wii branch")
+                        print(join(where_is_rb3dx, "_build", "wii"))
+                        exit(2)
                     bar()
                     copy(ark, dest)
                 bar.title("Executing build script...")
-                Popen(join(where_is_rb3dx, "_build_wii.bat")).wait()
+                Popen(join(where_is_rb3dx, "_build_wii_nopause.bat"), stdout=DEVNULL, stderr=DEVNULL).wait()
                 
 
 
@@ -148,7 +150,7 @@ else:
                 echo(f"Copying {ark}...")
                 copy(ark, join(dest, "rb3"))
             echo("Copying Riivolution XML")
-            copy(join(curdir, "rb3dx-riivo.xml"), join(dest, "riivolution"))
+            copy(join(getcwd(), "rb3dx-riivo.xml"), join(dest, "riivolution"))
             break
     echo("All done! Thank you!")
 
